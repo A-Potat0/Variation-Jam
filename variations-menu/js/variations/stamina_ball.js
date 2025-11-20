@@ -1,34 +1,11 @@
 /**
- * Title of Project
- * Author Name
- * 
- * HOW EMBARRASSING! I HAVE NO DESCRIPTION OF MY PROJECT!
- * PLEASE REMOVE A GRADE FROM MY WORK IF IT'S GRADED!
+ * The stamina
+ * Anthony Patient
+ *
+ * A stamina bar trying to survive
  */
 
 "use strict";
-
-// /**
-//  * OH LOOK I DIDN'T DESCRIBE SETUP!!
-// */
-// function setup() {
-
-// }
-
-
-// /**
-//  * OOPS I DIDN'T DESCRIBE WHAT MY DRAW DOES!
-// */
-// function draw() {
-
-// }
-
-/**
- * Boingo
- * Pippin Barr
- *
- * A ball that bounces around on the canvas
- */
 
 let ball1 = undefined; // Will create it with createBall()
 let ball = undefined;
@@ -45,25 +22,48 @@ let randomProgressHue = 0.1;
 
 
 let  balls = [];
+let  newRect = []
 
 /**
  * Create the canvas and the ball
  */
-function setup() {
+function stamBallSetup() {
   // Create the canvas
-  createCanvas(CanvasX, CanvasY);
+  newRect = [{
+        x: 0, y: 0, size: { x: width, y: 300},
+    },
+    {
+        x: 550, y: 0, size: { x: 600, y: height},
+    },
+    {
+        x: 0, y: 700, size: { x: width, y: 600},
+    },
+    {
+        x: 0, y: 0, size: { x: 450, y: height},
+    }];
   // Create the ball
-  ball1 = createBall();
+  balls = [];
 
-  balls.push (createBall());
+  ball1 = stamBallCreateBall();
+
+  balls.push (stamBallCreateBall());
 
   colorMode(HSB)
+}
+
+function newDrawRect(newRectangle) {
+    push();
+    noStroke();
+    fill(255, 255,255);
+    rect(newRectangle.x, newRectangle.y, newRectangle.size.x, newRectangle.size.y);
+    pop();
+    
 }
 
 /**
  * Creates a random ball
  */
-function createBall() {
+function stamBallCreateBall() {
   // Create a ball object with appropriate properties
   const newBall = {
     // Position and dimensions
@@ -85,37 +85,41 @@ function createBall() {
 /**
  * Moves and draws the ball
  */
-function draw() {
-    hueManegment()
+function stamBallDraw() {
+    stamBallHueManegment()
 
   background(hue,100,100); // <-- use hue to make the ractangle change color
   
     for (ball of balls) {
-      moveBall(ball);
-      bounceBall(ball);
-      drawBall(ball);
+      stamBallMoveBall(ball);
+      stamBallBounceBall(ball);
+      stamBallDrawBall(ball);
     }
 
-    if (frameCount % 60 === 0) {
-        resizeCanvas(CanvasX, CanvasY) // <--- change to a rectangle
-        // CanvasX -= 10
-        CanvasY = CanvasY -= CanvasY/20 + 1
-        // progressHue = progressHue -= 0.2
+    for (let newRectangle of newRect) {
+      newDrawRect(newRectangle);
     }
+
+    // if (frameCount % 60 === 0) {
+    //     resizeCanvas(CanvasX, CanvasY) // <--- change to a rectangle
+    //     // CanvasX -= 10
+    //     CanvasY = CanvasY -= CanvasY/20 + 1
+    //     // progressHue = progressHue -= 0.2
+    // }
 
     if (frameCount % 2 === 0) {
-        time()
+        stamBallTime()
     }
 
     
-    print(timeMesure)
+    // print(timeMesure)
 
 }
 
 /**
  * Moves the ball according to its velocity
  */
-function moveBall(ball) {
+function stamBallMoveBall(ball) {
   ball.x += ball.velocity.x;
   ball.y += ball.velocity.y;
 }
@@ -123,7 +127,7 @@ function moveBall(ball) {
 /**
  * Bounces the ball off the walls
  */
-function bounceBall(ball) {
+function stamBallBounceBall(ball) {
   // Check if the ball has reached the left or right
 //   const bounceXL = (ball.x < 0);
 //   const bounceXR = (ball.x > width);
@@ -158,7 +162,7 @@ function bounceBall(ball) {
   if (bounceY && timeMesure > 0) {
     ball.velocity.y *= -0.9;
     ball.velocity.x *= 1.01;
-    resizeCanvas(CanvasX, CanvasY)
+    // resizeCanvas(CanvasX, CanvasY)
     CanvasY += 1
     if (progressHue >= 1){
         targetHue = random(0,360)
@@ -226,7 +230,7 @@ function bounceBall(ball) {
 /**
  * Draw the ball on the canvas
  */
-function drawBall(ball) {
+function stamBallDrawBall(ball) {
   push();
   noStroke();
   fill(ball.fill1, ball.fill2);
@@ -237,19 +241,22 @@ function drawBall(ball) {
 /**
  * adding balls by doing stuff
  */
-function mousePressed() {
+function stamBallMousePressed() {
     ball.velocity.x *= 1.01;
     ball.velocity.y *= 1.2;
 
 }
 
-function keyPressed() {
+function stamBallKeyPressed(event) {
+  if (event.keyCode === 27) {
+        state = "menu";
+    }
     ball.velocity.x *= 1.01;
     ball.velocity.y *= 1.2;
 
 }
 
-function hueManegment() {
+function stamBallHueManegment() {
     progressHue = progressHue += randomProgressHue
 
     hue = lerp(startHue, targetHue, progressHue)
@@ -261,7 +268,7 @@ function hueManegment() {
     }
 }
 
-function time() {
+function stamBallTime() {
     timeMesure = timeMesure -= 0.1
     if (timeMesure <= -0.2) {
         timeMesure = 0.5
