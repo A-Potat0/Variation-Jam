@@ -1,4 +1,4 @@
-# ideas for variation jam
+# ideas for variation jam (crushing defeat)
 
 > stamina bar based
     > stamina pong?
@@ -8,7 +8,11 @@
         > spam the buttons
         > quick time event
         > 
+        > shoot balls to keep the sky from falling
+        >
         > 
+        >
+        > platforming ball on a mooving wall
         > 
 > have all of the diferent variations affect the others
 

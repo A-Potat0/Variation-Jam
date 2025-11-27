@@ -9,9 +9,13 @@
 
 let ball1 = undefined; // Will create it with createBall()
 let ball = undefined;
-let CanvasX = 100;
-let CanvasY = 400;
+let CanvasX = 1000;
+let CanvasY = 1000;
 let timeMesure = 0.2;
+let overlappX = undefined;
+let overlappY = undefined;
+let gameStateLoss = false
+
 
 
 let hue = 136;
@@ -30,16 +34,16 @@ let  newRect = []
 function stamBallSetup() {
   // Create the canvas
   newRect = [{
-        x: 0, y: 0, size: { x: width, y: 300},
+        x: 0, y: -500, size: { x: width, y: 800}, number: 1,
     },
     {
-        x: 550, y: 0, size: { x: 600, y: height},
+        x: 550, y: 0, size: { x: 600, y: height}, number: 2,
     },
     {
-        x: 0, y: 700, size: { x: width, y: 600},
+        x: 0, y: 700, size: { x: width, y: 800}, number: 3,
     },
     {
-        x: 0, y: 0, size: { x: 450, y: height},
+        x: 0, y: 0, size: { x: 450, y: height}, number: 4,
     }];
   // Create the ball
   balls = [];
@@ -47,14 +51,12 @@ function stamBallSetup() {
   ball1 = stamBallCreateBall();
 
   balls.push (stamBallCreateBall());
-
-  colorMode(HSB)
 }
 
 function newDrawRect(newRectangle) {
     push();
     noStroke();
-    fill(255, 255,255);
+    fill(0, 0,100);
     rect(newRectangle.x, newRectangle.y, newRectangle.size.x, newRectangle.size.y);
     pop();
     
@@ -71,7 +73,7 @@ function stamBallCreateBall() {
     y: CanvasY/2,
     size: 10,
     // Colour
-    fill1: random(0,255),
+    fill1: random(150,255),
     fill2: random(150,255),
     // Movement
     velocity: {
@@ -90,30 +92,43 @@ function stamBallDraw() {
 
   background(hue,100,100); // <-- use hue to make the ractangle change color
   
-    for (ball of balls) {
-      stamBallMoveBall(ball);
-      stamBallBounceBall(ball);
-      stamBallDrawBall(ball);
-    }
-
     for (let newRectangle of newRect) {
       newDrawRect(newRectangle);
+      checkGameState(newRectangle);
+      if(gameStateLoss){
+        if(newRectangle.number === 4) {
+          newRectangle.size.x += 100
+        }
+      }
+      if (frameCount % 2 === 0) {
+        if(newRectangle.number === 1) {
+        stamBallCrushTop(newRectangle);
+      }
+      if(newRectangle.number === 3) {
+        stamBallCrushBottom(newRectangle);
+      }
+      }
     }
 
-    // if (frameCount % 60 === 0) {
-    //     resizeCanvas(CanvasX, CanvasY) // <--- change to a rectangle
-    //     // CanvasX -= 10
-    //     CanvasY = CanvasY -= CanvasY/20 + 1
-    //     // progressHue = progressHue -= 0.2
-    // }
-
-    if (frameCount % 2 === 0) {
-        stamBallTime()
+    for (ball of balls) {
+      for (let newRectangle of newRect) {
+        if(stamBallOverlapp(ball,newRectangle)){
+          if(newRectangle.number === 1 || newRectangle.number === 3) {
+            stamBallBounceBallY(ball,newRectangle);
+          }
+          if(newRectangle.number === 2 || newRectangle.number === 4) {
+            stamBallBounceBallX(ball);
+          }
+        }
+      }
+      stamBallMoveBall(ball);
+      stamBallDrawBall(ball);
     }
-
-    
-    // print(timeMesure)
-
+  if(gameStateLoss){
+    balls = []
+    textSize(100)
+    text("GAME OVER",200,500)
+  }
 }
 
 /**
@@ -127,104 +142,74 @@ function stamBallMoveBall(ball) {
 /**
  * Bounces the ball off the walls
  */
-function stamBallBounceBall(ball) {
-  // Check if the ball has reached the left or right
-//   const bounceXL = (ball.x < 0);
-//   const bounceXR = (ball.x > width);
-  const bounceX = (ball.x > CanvasX || ball.x < 0);
-  // Check if the ball has reached the top or bottom
-  const bounceY = (ball.y > CanvasY || ball.y < 0);
+function stamBallBounceBallX(ball) {
   
-  // Check if the ball hit the corner
-  const corner1 = (ball.x < 1 && ball.y < 1);
-  const corner2 = (ball.x < 1 && ball.y > (CanvasY - 1) );
-  const corner3 = (ball.x > (CanvasX - 1) && ball.y < 1);
-  const corner4 = (ball.x > (CanvasX - 1) && ball.y > (CanvasY - 1));
+  ball.velocity.x *= -0.999;
+  ball.velocity.y *= 1;
 
-  const out = (ball.y > CanvasY + 10 || ball.y < -10 || ball.x > CanvasX + 10 || ball.x < -10);
-  
-  // Handle bouncing horizontally
-  if (bounceX) {
-    ball.velocity.x *= -0.999;
-    ball.velocity.y *= 1;
-    // CanvasX += 2
-    if (progressHue >= 1){
-        targetHue = random(0,360)
-        progressHue = 0;
-    }
+  if (progressHue >= 1){
+      targetHue = random(0,360)
+      progressHue = 0;
+   }
 
-  }
-//   if (bounceXR) {
-//     ball.velocity.x *= -1;
-    
-//   }
-  // Handle bouncing vertically
-  if (bounceY && timeMesure > 0) {
+}
+
+function stamBallBounceBallY(ball,newRectangle) {
     ball.velocity.y *= -0.9;
     ball.velocity.x *= 1.01;
-    // resizeCanvas(CanvasX, CanvasY)
-    CanvasY += 1
+
+  if(gameStateLoss){
+    newRect[0].y -= 0;
+    newRect[2].y += 0;
+  }
+  else{
+    newRect[0].y -= 10;
+    newRect[2].y += 10;
+  }
+    // if(newRectangle.number === 1) {
+      
+    // }
+    // if(newRectangle.number === 3) {
+      
+    // }
+    
     if (progressHue >= 1){
         targetHue = random(0,360)
         progressHue = 0;
     }
-    
+
+}
+// function stamBallBounceBallBottom(ball,newRectangle) {
+//     ball.velocity.y *= -0.9;
+//     ball.velocity.x *= 1.01;
+
+//     newRectangle.y += 10
+
+//     if (progressHue >= 1){
+//         targetHue = random(0,360)
+//         progressHue = 0;
+//     }
+
+// }
+
+function stamBallCrushTop(newRectangle){
+  
+  if(gameStateLoss){
+    newRectangle.y += 10
   }
-  else if (bounceY && timeMesure <= 0) {
-    if (ball.y == CanvasY) {
-        ball.y = CanvasY /2
-    }
-    if (ball.y == 0) {
-        ball.y = CanvasY /2
-    }
-  }
-    
-
-
-  if (out) {
-    ball.y = CanvasY / 2
-    ball.x = CanvasX / 2
-
+  else{
+    newRectangle.y += map(newRectangle.y,-300,-800,0.1,10)
   }
 
-
-//   let hitCorner = false;
-//   // Handle corners
-//   if (corner1) {
-//     ball.y = CanvasY / 2
-//     ball.x = CanvasX / 2
-//     // print(index);
-//     hitCorner = true;
-//   }
-//   if (corner2) {
-//     ball.y = CanvasY / 2
-//     ball.x = CanvasX / 2
-//     // print(index);
-//     hitCorner = true;
-//   }
-//   if (corner3) {
-//     ball.y = CanvasY / 2
-//     ball.x = CanvasX / 2
-//     // print(index);
-//     hitCorner = true;
-//   }
-//   if (corner4) {
-//     ball.y = CanvasY / 2
-//     ball.x = CanvasX / 2
-//     // print(index);
-//     hitCorner = true;
-//   }
-
-//   if (hitCorner) {
-//     // ball hit a corner
-//     const index = balls.indexOf(ball);
-//     print(index);
-//   }
-
-//   if (ball.size <= 0) {
-//     ball.fill2 -= 1
-//   }
-
+}
+function stamBallCrushBottom(newRectangle){
+  
+  if(gameStateLoss){
+    newRectangle.y -= 10
+  }
+  else{
+    newRectangle.y -= map(newRectangle.y,500,1000,0.,10)
+  }
 }
 
 /**
@@ -238,22 +223,47 @@ function stamBallDrawBall(ball) {
   pop();
 }
 
+function stamBallOverlapp(ball,newRectangle){
+  if (ball.x + ball.size/2 > newRectangle.x &&
+     ball.x - ball.size/2 < newRectangle.x + newRectangle.size.x &&
+     ball.y + ball.size/2 > newRectangle.y &&
+     ball.y - ball.size/2 < newRectangle.y + newRectangle.size.y) {
+    return true;
+  }
+  else {
+    return false;
+  }
+
+}
+
 /**
  * adding balls by doing stuff
  */
 function stamBallMousePressed() {
-    ball.velocity.x *= 1.01;
+  
+  if (ball.velocity.y > 50){
+    ball.velocity.x *= 0.9;
+    ball.velocity.y *= 0.8;
+  }
+  else if (ball.velocity.y < 50){
+    ball.velocity.x *= 1.02;
     ball.velocity.y *= 1.2;
-
+  }
 }
 
 function stamBallKeyPressed(event) {
   if (event.keyCode === 27) {
         state = "menu";
     }
-    ball.velocity.x *= 1.01;
-    ball.velocity.y *= 1.2;
 
+  if (ball.velocity.y > 50){
+    ball.velocity.x *= 0.9;
+    ball.velocity.y *= 0.8;
+  }
+  else if (ball.velocity.y < 50){
+    ball.velocity.x *= 1.02;
+    ball.velocity.y *= 1.2;
+  }
 }
 
 function stamBallHueManegment() {
@@ -273,4 +283,13 @@ function stamBallTime() {
     if (timeMesure <= -0.2) {
         timeMesure = 0.5
     }
+}
+
+function checkGameState(newRectangle){
+  if(newRectangle.number === 1){
+    if(newRectangle.y > -330){
+      print("Game Over")
+      gameStateLoss = true
+    }
+  }
 }

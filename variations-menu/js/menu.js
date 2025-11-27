@@ -47,7 +47,7 @@ function menuDraw() {
 function testDrawRect(rectangle) {
     push();
     noStroke();
-    fill(255, 255, 255);
+    fill(0, 0, 100);
     rect(rectangle.x, rectangle.y, rectangle.size.x, rectangle.size.y);
     pop();
     

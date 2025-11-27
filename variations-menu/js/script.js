@@ -17,6 +17,7 @@ let state = "menu";
 function setup() {
     createCanvas(1000, 1000);
     menuSetup()
+    colorMode(HSB)
 }
 
 
