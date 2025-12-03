@@ -33,8 +33,8 @@ function draw() {
         case "red-variation":
             redDraw();
             break
-        case "green-variation":
-            greenDraw();
+        case "sky-variation":
+            skyDraw();
             break;
         case "stamina_ball-variation":
             stamBallDraw();
@@ -55,8 +55,8 @@ function mousePressed() {
         case "red-variation":
             redMousePressed();
             break
-        case "green-variation":
-            greenMousePressed();
+        case "sky-variation":
+            skyMousePressed();
             break;
         case "stamina_ball-variation":
             stamBallMousePressed();
@@ -76,8 +76,8 @@ function keyPressed(event) {
         case "red-variation":
             redKeyPressed(event);
             break
-        case "green-variation":
-            greenKeyPressed(event);
+        case "sky-variation":
+            skyKeyPressed(event);
             break;
         case "stamina_ball-variation":
             stamBallKeyPressed(event);

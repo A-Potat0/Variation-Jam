@@ -5,24 +5,24 @@
  */
 
 const menuText = `
-(R) Red variation
-(G) Green variation
-(B) stamina_ball`
+(R) Red
+(G) sky
+(B) stamina ball`
 
-let  testRect = []
+let testRect = []
 
-function menuSetup(){
+function menuSetup() {
     testRect = [{
-        x: 0, y: 0, size: { x: width, y: height*(1/4)},
+        x: 0, y: 0, size: { x: width, y: height * (1 / 4) },
     },
     {
-        x: width*(3/4), y: 0, size: { x: width*(1/4), y: height},
+        x: width * (3 / 4), y: 0, size: { x: width * (1 / 4), y: height },
     },
     {
-        x: 0, y: height*(3/4), size: { x: width, y: height*(1/4)},
+        x: 0, y: height * (3 / 4), size: { x: width, y: height * (1 / 4) },
     },
     {
-        x: 0, y: 0, size: { x: width*(1/4), y: height},
+        x: 0, y: 0, size: { x: width * (1 / 4), y: height },
     }];
 }
 
@@ -50,7 +50,7 @@ function testDrawRect(rectangle) {
     fill(0, 0, 100);
     rect(rectangle.x, rectangle.y, rectangle.size.x, rectangle.size.y);
     pop();
-    
+
 }
 
 /**
@@ -64,8 +64,8 @@ function menuKeyPressed(event) {
             break;
 
         case 71:
-            state = "green-variation";
-            greenSetup();
+            state = "sky-variation";
+            skySetup();
             break;
 
         case 66:
