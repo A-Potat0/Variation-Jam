@@ -5,9 +5,15 @@
  */
 
 const menuText = `
-(R) Red
-(G) sky
-(B) stamina ball`
+(R) wall VS balls
+(G) cannon VS sky
+(B) bouncy ball`
+
+const infoText = `press "R" "G" or "B" 
+to see if you can avoid
+a CRUSHING defeat`
+
+const moreInfoText = `mash your keyboard to stay alive and overcome the shallenges`
 
 let testRect = []
 
@@ -37,6 +43,10 @@ function menuDraw() {
     textSize(32);
     textAlign(CENTER, CENTER);
     text(menuText, width / 2, height / 2);
+    textSize(24);
+    text(infoText, width / 2, 350)
+    textSize(16);
+    text(moreInfoText, width / 2, 680)
     pop();
 
     for (let rectangle of testRect) {
@@ -59,8 +69,8 @@ function testDrawRect(rectangle) {
 function menuKeyPressed(event) {
     switch (event.keyCode) {
         case 82:
-            state = "red-variation";
-            redSetup();
+            state = "wall-variation";
+            wallSetup();
             break;
 
         case 71:

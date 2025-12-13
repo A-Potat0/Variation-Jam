@@ -30,8 +30,8 @@ function draw() {
         case "menu":
             menuDraw();
             break;
-        case "red-variation":
-            redDraw();
+        case "wall-variation":
+            wallDraw();
             break
         case "sky-variation":
             skyDraw();
@@ -52,8 +52,8 @@ function mousePressed() {
         case "menu":
             menuMousePressed();
             break;
-        case "red-variation":
-            redMousePressed();
+        case "wall-variation":
+            wallMousePressed();
             break
         case "sky-variation":
             skyMousePressed();
@@ -73,8 +73,8 @@ function keyPressed(event) {
         case "menu":
             menuKeyPressed(event);
             break;
-        case "red-variation":
-            redKeyPressed(event);
+        case "wall-variation":
+            wallKeyPressed(event);
             break
         case "sky-variation":
             skyKeyPressed(event);

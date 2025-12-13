@@ -7,14 +7,14 @@
 
 "use strict";
 
-let ball1 = undefined; // Will create it with createBall()
+// let ball1 = undefined; // Will create it with createBall()
 let ball = undefined;
 let CanvasX = 1000;
 let CanvasY = 1000;
-let timeMesure = 0.2;
-let overlappX = undefined;
-let overlappY = undefined;
-let gameStateLoss = false
+// let timeMesure = 0.2;
+// let overlappX = undefined;
+// let overlappY = undefined;
+let stamBallgameStateLoss = false;
 
 
 
@@ -26,7 +26,7 @@ let randomProgressHue = 0.1;
 
 
 let stamBall_balls = [];
-let stamBallRect = []
+let stamBallRect = [];
 
 /**
  * Create the canvas and the ball
@@ -94,8 +94,8 @@ function stamBallDraw() {
 
   for (let stamBallRectangle of stamBallRect) {
     stamBallDrawRect(stamBallRectangle);
-    checkGameState(stamBallRectangle);
-    if (gameStateLoss) {
+    stamBallcheckGameState(stamBallRectangle);
+    if (stamBallgameStateLoss) {
       if (stamBallRectangle.number === 4) {
         stamBallRectangle.size.x += 100
       }
@@ -124,7 +124,7 @@ function stamBallDraw() {
     stamBallMoveBall(ball);
     stamBallDrawBall(ball);
   }
-  if (gameStateLoss) {
+  if (stamBallgameStateLoss) {
     stamBall_balls = []
     textSize(100)
     text("GAME OVER", 200, 500)
@@ -158,7 +158,7 @@ function stamBallBounceBallY(ball, stamBallRectangle) {
   ball.velocity.y *= -0.9;
   ball.velocity.x *= 1.01;
 
-  if (gameStateLoss) {
+  if (stamBallgameStateLoss) {
     stamBallRect[0].y -= 0;
     stamBallRect[2].y += 0;
   }
@@ -194,7 +194,7 @@ function stamBallBounceBallY(ball, stamBallRectangle) {
 
 function stamBallCrushTop(stamBallRectangle) {
 
-  if (gameStateLoss) {
+  if (stamBallgameStateLoss) {
     stamBallRectangle.y += 10
   }
   else {
@@ -204,7 +204,7 @@ function stamBallCrushTop(stamBallRectangle) {
 }
 function stamBallCrushBottom(stamBallRectangle) {
 
-  if (gameStateLoss) {
+  if (stamBallgameStateLoss) {
     stamBallRectangle.y -= 10
   }
   else {
@@ -278,18 +278,18 @@ function stamBallHueManegment() {
   }
 }
 
-function stamBallTime() {
-  timeMesure = timeMesure -= 0.1
-  if (timeMesure <= -0.2) {
-    timeMesure = 0.5
-  }
-}
+// function stamBallTime() {
+//   timeMesure = timeMesure -= 0.1
+//   if (timeMesure <= -0.2) {
+//     timeMesure = 0.5
+//   }
+// }
 
-function checkGameState(stamBallRectangle) {
+function stamBallcheckGameState(stamBallRectangle) {
   if (stamBallRectangle.number === 1) {
     if (stamBallRectangle.y > -330) {
       print("Game Over")
-      gameStateLoss = true
+      stamBallgameStateLoss = true
     }
   }
 }
